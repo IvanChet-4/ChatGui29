@@ -60,17 +60,15 @@ public class HelloController {
                             if (jsonResponse.get("users") != null){
                                 textAreaContact.clear();
                                 JSONArray jsonArray = (JSONArray) jsonParser.parse(jsonResponse.get("users").toString() + "\n");
-                                for (int i=0; i < jsonArray.size();i++){
-                                   JSONObject jsonUserInfo = (JSONObject) jsonParser.parse(jsonArray.get(i).toString());
-                                String name =  jsonUserInfo.get("name").toString();
-                                textAreaContact.appendText(name + "\n");
+                                    for (int i=0; i < jsonArray.size();i++){
+                                    JSONObject jsonUserInfo = (JSONObject) jsonParser.parse(jsonArray.get(i).toString());
+                                    String name =  jsonUserInfo.get("name").toString();
+                                    textAreaContact.appendText(name + "\n");
                                 }
-                            } else if (jsonResponse.get("msg")!=null) {
+                            } else if (jsonResponse.get("msg") != null) {
                                 textArea.appendText(jsonResponse.get("msg").toString() + "\n");
                             }
-
-
-                           textArea.appendText(is.readUTF()+"\n");
+                           //textArea.appendText(is.readUTF()+"\n");
                        } catch (IOException | ParseException e) {
                            e.printStackTrace();
                        }
@@ -82,6 +80,4 @@ public class HelloController {
            throw new RuntimeException(e);
        }
    }
-
-
 }
