@@ -4,15 +4,16 @@
 <?import javafx.scene.layout.*?>
 
 <HBox xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.chatgui29.HelloController">
-    <TextArea fx:id="textAreaContact" editable="false" prefHeight="Infinity" prefWidth="300" />
-
+    <TextArea fx:id="textAreaContact" editable="false" prefHeight="Infinity" prefWidth="150" />
+    <HBox prefHeight="Infinity" prefWidth="5">
+    </HBox>
 <VBox>
- <TextArea fx:id="textArea" editable="false" prefHeight="550" prefWidth="300" />
+ <TextArea fx:id="textArea" editable="false" prefHeight="550" prefWidth="250" />
      <HBox prefHeight="50" prefWidth="250">
            <TextField fx:id="textField" onAction="#handlerSend" prefWidth="200" />
                 <Button fx:id="sendBtn" disable="true" onAction="#handlerSend" prefHeight="25" prefWidth="100" text="Отправить" />
      </HBox>
-    <Button fx:id="connectBtn" onAction="#connect" prefHeight="25" prefWidth="100" text="Подключиться" translateX="200"/>
+    <Button fx:id="connectBtn" onAction="#connect" prefHeight="25" prefWidth="250" text="Подключиться"/>
 
 </VBox>
 </HBox>
