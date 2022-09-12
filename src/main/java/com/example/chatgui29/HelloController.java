@@ -1,10 +1,12 @@
 package com.example.chatgui29;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -24,20 +26,22 @@ public class HelloController {
    @FXML
    Button connectBtn;
    @FXML
-   TextArea textAreaContact;
+//   TextArea textAreaContact;
+   VBox usersListVBox;
     boolean isAuth = false;
     String login = null;
     String pass = null;
 
     protected void auth () throws IOException {
         String token = "";
-        try{
-        FileReader reader = new FileReader("C://Users/MTSUser/Desktop/token.txt");
-        int i;
-        while((i=reader.read())!=-1)
-token += (char) i;}catch(IOException e){
-            System.out.println("token not found");
-        }
+//        try{
+//        FileReader reader = new FileReader("C://Users/MTSUser/Desktop/token.txt");
+//        int i;
+//        while((i=reader.read())!=-1)
+//token += (char) i;
+//        }catch(IOException e){
+//            System.out.println("token not found");
+//        }
 
         if (token.equals("")){
             textArea.appendText("Введите логин: " + "\n");
@@ -105,12 +109,24 @@ token += (char) i;}catch(IOException e){
 
 
                                if (jsonResponse.get("users") != null) {
-                                   textAreaContact.clear();
+                                   //textAreaContact.clear();
+                                   usersListVBox.getChildren().removeAll();
                                    JSONArray jsonArray = (JSONArray) jsonParser.parse(jsonResponse.get("users").toString() + "\n");
                                    for (int i = 0; i < jsonArray.size(); i++) {
                                        JSONObject jsonUserInfo = (JSONObject) jsonParser.parse(jsonArray.get(i).toString());
                                        String name = jsonUserInfo.get("name").toString();
-                                       textAreaContact.appendText(name + "\n");
+                                       //textAreaContact.appendText(name + "\n");
+                                       Button userBrn = new Button();
+                                       userBrn.setText(name);
+                                       userBrn.setOnAction(e -> {
+                                           textArea.appendText("Нажата кнопка \n");
+                                       });
+                                       Platform.runLater(new Runnable() {
+                                           @Override
+                                           public void run() {
+                                               usersListVBox.getChildren().add(userBrn);
+                                           }
+                                       });
                                    }
                                } else if (jsonResponse.get("msg") != null) {
                                    textArea.appendText(jsonResponse.get("msg").toString() + "\n");
@@ -121,6 +137,17 @@ token += (char) i;}catch(IOException e){
                                    byte[] buffer = token.getBytes();
                                    fos.write(buffer);
                                    fos.close();
+                               }else if (jsonResponse.get("messages") != null){
+                                   JSONArray messages = (JSONArray) jsonParser.parse(jsonResponse.get("messages").toString());
+                                    for (int i=0; i<messages.size(); i++ ){
+                                        JSONObject message = (JSONObject) jsonParser.parse(messages.get(i).toString());
+                                        String name = message.get("name").toString();
+                                        String msg = message.get("msg").toString();
+                                        textArea.appendText(name +": "+msg+ "\n");
+
+                                    }
+
+
                                }
 
                                //textArea.appendText(is.readUTF()+"\n");

@@ -4,7 +4,8 @@
 <?import javafx.scene.layout.*?>
 
 <HBox xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.chatgui29.HelloController">
-    <TextArea fx:id="textAreaContact" editable="false" prefHeight="Infinity" prefWidth="150" />
+<!--    <TextArea fx:id="textAreaContact" editable="false" prefHeight="Infinity" prefWidth="150" />-->
+    <VBox prefHeight="Infinity" prefWidth="150" fx:id="usersListVBox"/>
     <HBox prefHeight="Infinity" prefWidth="5">
     </HBox>
 <VBox>
