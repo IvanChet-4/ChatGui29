@@ -2,6 +2,7 @@ package com.example.chatgui29;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
@@ -14,6 +15,10 @@ import org.json.simple.parser.ParseException;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class HelloController {
    private DataOutputStream out;
@@ -34,6 +39,7 @@ public class HelloController {
 
     protected void auth () throws IOException {
         String token = "";
+        //Для авторизации по токену
 //        try{
 //        FileReader reader = new FileReader("C://Users/MTSUser/Desktop/token.txt");
 //        int i;
@@ -111,6 +117,7 @@ public class HelloController {
                                if (jsonResponse.get("users") != null) {
                                    //textAreaContact.clear();
                                    usersListVBox.getChildren().removeAll();
+
                                    JSONArray jsonArray = (JSONArray) jsonParser.parse(jsonResponse.get("users").toString() + "\n");
                                    for (int i = 0; i < jsonArray.size(); i++) {
                                        JSONObject jsonUserInfo = (JSONObject) jsonParser.parse(jsonArray.get(i).toString());
@@ -121,13 +128,23 @@ public class HelloController {
                                        userBrn.setOnAction(e -> {
                                            textArea.appendText("Нажата кнопка \n");
                                        });
-                                       Platform.runLater(new Runnable() {
-                                           @Override
-                                           public void run() {
-                                               usersListVBox.getChildren().add(userBrn);
-                                           }
-                                       });
+
+//                                       ArrayList<String> asdasd = new ArrayList<>();//
+//                                       if (!asdasd.equals(userBrn.getText())) {//
+
+                                           Platform.runLater(new Runnable() {
+                                               @Override
+                                               public void run() {
+                                                   usersListVBox.getChildren().add(userBrn);//
+                                                   //usersListVBox.getChildren().retainAll(userBrn);//
+                                                   System.out.println(userBrn.toString());
+                                               }
+                                           });
+                                       //
+                                     //  asdasd.add(userBrn.getText());}//
                                    }
+
+
                                } else if (jsonResponse.get("msg") != null) {
                                    textArea.appendText(jsonResponse.get("msg").toString() + "\n");
                                } else if (jsonResponse.get("authResult") != null) {
