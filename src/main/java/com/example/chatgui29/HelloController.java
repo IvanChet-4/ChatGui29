@@ -31,7 +31,6 @@ public class HelloController {
    @FXML
    Button connectBtn;
    @FXML
-//   TextArea textAreaContact;
    VBox usersListVBox;
     boolean isAuth = false;
     String login = null;
@@ -40,44 +39,44 @@ public class HelloController {
 
     protected void auth () throws IOException {
         String token = "";
-        //Для авторизации по токену
-//        try{
+        //Код для авторизации по токену
+//        try {
 //        FileReader reader = new FileReader("C://Users/MTSUser/Desktop/token.txt");
 //        int i;
 //        while((i=reader.read())!=-1)
 //token += (char) i;
-//        }catch(IOException e){
+//        } catch(IOException e) {
 //            System.out.println("token not found");
 //        }
 
         if (token.equals("")){
             textArea.appendText("Введите логин: " + "\n");
-        }else{JSONObject jsonObject = new JSONObject();
-        jsonObject.put("login", "");
-        jsonObject.put("pass", "");
-        jsonObject.put("token", token);
-        out.writeUTF(jsonObject.toJSONString());
+        } else {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("login", "");
+            jsonObject.put("pass", "");
+            jsonObject.put("token", token);
+            out.writeUTF(jsonObject.toJSONString());
         }
-
     }
 
     @FXML
     protected void  handlerSend() throws IOException {
     String text = textField.getText();
-    if(text.equals("")) return;
-    textField.clear();
-    textField.requestFocus();
-    textArea.appendText(text + "\n");
-    if (isAuth){
-        JSONObject request = new JSONObject();
-        request.put("msg", text);
-        request.put("to_id", to_id);
-        out.writeUTF(request.toJSONString());
-    }else{
+        if(text.equals("")) return;
+            textField.clear();
+            textField.requestFocus();
+            textArea.appendText(text + "\n");
+        if (isAuth) {
+            JSONObject request = new JSONObject();
+            request.put("msg", text);
+            request.put("to_id", to_id);
+            out.writeUTF(request.toJSONString());
+        } else {
         if (login == null) {
             login = text;
             textArea.appendText("Введите пароль: " + "\n");
-        } else if(pass == null){
+        } else if(pass == null) {
             pass = text;
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("login", login);
@@ -87,7 +86,7 @@ public class HelloController {
             login = null; pass = null;
         }
     }
-   }
+}
 
    @FXML
     public void connect(){
@@ -97,44 +96,33 @@ public class HelloController {
            DataInputStream is = new DataInputStream(socket.getInputStream());
            connectBtn.setDisable(true);
            sendBtn.setDisable(false);
-
            Thread thread = new Thread(new Runnable() {
                @Override
                public void run() {
-
                    while (true) {
-
                        try {
-                           //System.out.println(isAuth + " do if");
-                           if (!isAuth){
-                            //   System.out.println(isAuth + " in if");
-                           auth();}//
-
+                           if (!isAuth) {
+                           auth();
+                           }
                            String response = is.readUTF();
                            JSONParser jsonParser = new JSONParser();
                            JSONObject jsonResponse = (JSONObject) jsonParser.parse(response);
                            System.out.println(jsonResponse.get("authResult"));
-
-
                                if (jsonResponse.get("users") != null) {
-                                   //textAreaContact.clear();
                                    usersListVBox.getChildren().removeAll();
-
                                    Platform.runLater(new Runnable() {
                                        @Override
                                        public void run() {
                                            usersListVBox.getChildren().clear();
                                        }});
-
                                    JSONArray jsonArray = (JSONArray) jsonParser.parse(jsonResponse.get("users").toString() + "\n");
-                                   for (int i = 0; i < jsonArray.size(); i++) {
-                                       JSONObject jsonUserInfo = (JSONObject) jsonParser.parse(jsonArray.get(i).toString());
-                                       String name = jsonUserInfo.get("name").toString();
-                                       int id = Integer.parseInt(jsonUserInfo.get("id").toString());
-                                       //textAreaContact.appendText(name + "\n");
-                                       Button userBrn = new Button();
-                                       userBrn.setText(name);
-                                       userBrn.setOnAction(e -> {
+                                       for (int i = 0; i < jsonArray.size(); i++) {
+                                         JSONObject jsonUserInfo = (JSONObject) jsonParser.parse(jsonArray.get(i).toString());
+                                         String name = jsonUserInfo.get("name").toString();
+                                         int id = Integer.parseInt(jsonUserInfo.get("id").toString());
+                                         Button userBrn = new Button();
+                                         userBrn.setText(name);
+                                         userBrn.setOnAction(e -> {
                                            textArea.appendText("Нажата кнопка \n");
                                            JSONObject  jsonObject = new JSONObject();
                                            jsonObject.put("getHistoryMessage", id);
@@ -146,23 +134,13 @@ public class HelloController {
                                                throw new RuntimeException(ex);
                                            }
                                        });
-
-//                                       ArrayList<String> asdasd = new ArrayList<>();//
-//                                       if (!asdasd.equals(userBrn.getText())) {//
-
                                            Platform.runLater(new Runnable() {
                                                @Override
                                                public void run() {
-                                                   usersListVBox.getChildren().add(userBrn);//
-                                                   //usersListVBox.getChildren().stream().sorted().;//
-                                                   System.out.println(userBrn.toString());
+                                                   usersListVBox.getChildren().add(userBrn);
                                                }
                                            });
-                                       //
-                                     //  asdasd.add(userBrn.getText());}//
                                    }
-
-
                                } else if (jsonResponse.get("msg") != null) {
                                    textArea.appendText(jsonResponse.get("msg").toString() + "\n");
                                } else if (jsonResponse.get("authResult") != null) {
@@ -172,35 +150,28 @@ public class HelloController {
                                    byte[] buffer = token.getBytes();
                                    fos.write(buffer);
                                    fos.close();
-                               }else if (jsonResponse.get("messages") != null){
+                               } else if (jsonResponse.get("messages") != null) {
                                    JSONArray messages = (JSONArray) jsonParser.parse(jsonResponse.get("messages").toString());
-                                    for (int i=0; i<messages.size(); i++ ){
+                                    for (int i=0; i<messages.size(); i++ ) {
                                         JSONObject message = (JSONObject) jsonParser.parse(messages.get(i).toString());
                                         String name = message.get("name").toString();
                                         String msg = message.get("msg").toString();
                                         textArea.appendText(name +": "+msg+ "\n");
-
                                     }
-
-
-                               }else if (jsonResponse.get("privateMessages")!=null){
+                               } else if (jsonResponse.get("privateMessages")!=null) {
                                    JSONArray messages = (JSONArray) jsonParser.parse(jsonResponse.get("privateMessages").toString());
                                    for (int i=0; i<messages.size(); i++ ) {
                                        JSONObject singleJsonArray = (JSONObject) jsonParser.parse(messages.get(i).toString());
                                        String msg = singleJsonArray.get("msg").toString();
                                        textArea.appendText(msg + "\n");
-
                                    }
                                }
-
-                               //textArea.appendText(is.readUTF()+"\n");
-                           } catch(IOException | ParseException e){
+                           } catch(IOException | ParseException e) {
                                e.printStackTrace();
                            }
 
                        }
                    }
-
            });
            thread.start();
        } catch (IOException e) {
