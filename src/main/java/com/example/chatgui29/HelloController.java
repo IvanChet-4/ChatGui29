@@ -36,6 +36,7 @@ public class HelloController {
     boolean isAuth = false;
     String login = null;
     String pass = null;
+    int to_id = 0;
 
     protected void auth () throws IOException {
         String token = "";
@@ -70,6 +71,7 @@ public class HelloController {
     if (isAuth){
         JSONObject request = new JSONObject();
         request.put("msg", text);
+        request.put("to_id", to_id);
         out.writeUTF(request.toJSONString());
     }else{
         if (login == null) {
@@ -118,15 +120,31 @@ public class HelloController {
                                    //textAreaContact.clear();
                                    usersListVBox.getChildren().removeAll();
 
+                                   Platform.runLater(new Runnable() {
+                                       @Override
+                                       public void run() {
+                                           usersListVBox.getChildren().clear();
+                                       }});
+
                                    JSONArray jsonArray = (JSONArray) jsonParser.parse(jsonResponse.get("users").toString() + "\n");
                                    for (int i = 0; i < jsonArray.size(); i++) {
                                        JSONObject jsonUserInfo = (JSONObject) jsonParser.parse(jsonArray.get(i).toString());
                                        String name = jsonUserInfo.get("name").toString();
+                                       int id = Integer.parseInt(jsonUserInfo.get("id").toString());
                                        //textAreaContact.appendText(name + "\n");
                                        Button userBrn = new Button();
                                        userBrn.setText(name);
                                        userBrn.setOnAction(e -> {
                                            textArea.appendText("Нажата кнопка \n");
+                                           JSONObject  jsonObject = new JSONObject();
+                                           jsonObject.put("getHistoryMessage", id);
+                                           to_id = id;
+                                           textArea.clear();
+                                           try {
+                                               out.writeUTF(jsonObject.toJSONString());
+                                           } catch (IOException ex) {
+                                               throw new RuntimeException(ex);
+                                           }
                                        });
 
 //                                       ArrayList<String> asdasd = new ArrayList<>();//
@@ -136,7 +154,7 @@ public class HelloController {
                                                @Override
                                                public void run() {
                                                    usersListVBox.getChildren().add(userBrn);//
-                                                   //usersListVBox.getChildren().retainAll(userBrn);//
+                                                   //usersListVBox.getChildren().stream().sorted().;//
                                                    System.out.println(userBrn.toString());
                                                }
                                            });
@@ -165,6 +183,14 @@ public class HelloController {
                                     }
 
 
+                               }else if (jsonResponse.get("privateMessages")!=null){
+                                   JSONArray messages = (JSONArray) jsonParser.parse(jsonResponse.get("privateMessages").toString());
+                                   for (int i=0; i<messages.size(); i++ ) {
+                                       JSONObject singleJsonArray = (JSONObject) jsonParser.parse(messages.get(i).toString());
+                                       String msg = singleJsonArray.get("msg").toString();
+                                       textArea.appendText(msg + "\n");
+
+                                   }
                                }
 
                                //textArea.appendText(is.readUTF()+"\n");
