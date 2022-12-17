@@ -115,25 +115,26 @@ public class HelloController {
                                         usersListVBox.getChildren().clear();
                                     }
                                 });
-        JSONArray jsonArray = (JSONArray) jsonParser.parse(jsonResponse.get("users").toString() + "\n");
-        for (int i = 0; i < jsonArray.size(); i++) {
-            JSONObject jsonUserInfo = (JSONObject) jsonParser.parse(jsonArray.get(i).toString());
-            String name = jsonUserInfo.get("name").toString();
-            int id = Integer.parseInt(jsonUserInfo.get("id").toString());
-            Button userBrn = new Button();
-            userBrn.setText(name);
-            userBrn.setOnAction(e -> {
-            textArea.appendText("Нажата кнопка \n");
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("getHistoryMessage", id);
-            to_id = id;
-            textArea.clear();
-        try {
-            out.writeUTF(jsonObject.toJSONString());
-        } catch (IOException ex) {
-             throw new RuntimeException(ex);
-        }
-    });
+
+                JSONArray jsonArray = (JSONArray) jsonParser.parse(jsonResponse.get("users").toString() + "\n");
+                    for (int i = 0; i < jsonArray.size(); i++) {
+                        JSONObject jsonUserInfo = (JSONObject) jsonParser.parse(jsonArray.get(i).toString());
+                        String name = jsonUserInfo.get("name").toString();
+                        int id = Integer.parseInt(jsonUserInfo.get("id").toString());
+                            Button userBrn = new Button();
+                                userBrn.setText(name);
+                                userBrn.setOnAction(e -> {
+                            textArea.appendText("Нажата кнопка \n");
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("getHistoryMessage", id);
+                to_id = id;
+                textArea.clear();
+            try {
+                out.writeUTF(jsonObject.toJSONString());
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
            Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
